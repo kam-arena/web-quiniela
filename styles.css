@@ -82,3 +82,138 @@ h1 {
         font-size: 2.5rem;
     }
 }
+
+/* Contenedor de tabla */
+#quinielaContainer {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+/* Tabla de quiniela */
+.tabla-quiniela {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.tabla-quiniela tr {
+    border-bottom: 1px solid #d0d7de;
+}
+
+.tabla-quiniela td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+/* Celda de número */
+.celda-numero {
+    font-weight: 600;
+    color: #1f2328;
+    width: 3rem;
+    min-width: 3rem;
+}
+
+/* Celda de texto (nombre del partido) */
+.celda-texto {
+    text-align: left;
+    color: #24292f;
+    flex-grow: 1;
+    min-width: 150px;
+    font-size: 0.8rem;
+}
+
+/* Celda de opción */
+.celda-opcion {
+    padding: 0.5rem 0.15rem;
+    text-align: center;
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+/* Botones de opciones */
+.btn-opcion {
+    padding: 0.5rem 0.6rem;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1f2328;
+    background-color: #f5f7fa;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 32px;
+    min-width: 32px;
+}
+
+.btn-opcion:hover {
+    background-color: #e8eef5;
+    border-color: #8fa6c1;
+}
+
+.btn-opcion:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.btn-opcion.seleccionado {
+    background-color: #4a90e2;
+    color: #ffffff;
+    border-color: #4a90e2;
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+}
+
+.btn-opcion.seleccionado:hover {
+    background-color: #3a7bc8;
+    border-color: #3a7bc8;
+}
+
+/* Filas del partido 15 */
+.fila-partido-15 {
+    background-color: #f9fafb;
+    border-bottom: none;
+}
+
+/* Sin borde inferior de la última fila */
+.tabla-quiniela tr:last-child, .tabla-quiniela tr.fila-partido-15 {
+    border-bottom: none;
+}
+
+/* Botón Guardar */
+#btnGuardarPronostico {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#btnGuardarPronostico:hover {
+    background-color: #3a7bc8;
+    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+}
+
+#btnGuardarPronostico:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+#btnGuardarPronostico:active {
+    transform: scale(0.98);
+}
