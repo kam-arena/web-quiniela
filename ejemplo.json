@@ -19,8 +19,17 @@
         "Valencia vs Real Madrid"
     ],
     "pronosticos": [],
-    "dobles": [],
-    "resultado_ultima_quiniela": "",
-    "pronosticos_semana_pasada": [],
+    "dobles": [
+        { "usuario": "Vicente", "pronosticos": [
+            { "partido": "", "pronostico": "" },
+            { "partido": "", "pronostico": "" }
+        ] },
+        { "usuario": "Jorge", "pronosticos": [
+            { "partido": "", "pronostico": "" }
+        ] },
+        { "usuario": "Jose Manuel", "pronosticos": [
+            { "partido": "", "pronostico": "" }
+        ] }
+    ],
     "pronostico_definitivo": ""
 }

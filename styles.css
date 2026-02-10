@@ -332,3 +332,128 @@ h1 {
         padding: 1rem 0;
     }
 }
+
+/* Sección de Dobles */
+#seccionDobles {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #d0d7de;
+}
+
+.label-dobles {
+    color: #1f2328;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.fila-doble {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: #f9fafb;
+    border-radius: 6px;
+    flex-wrap: wrap;
+}
+
+.selector-partido-doble {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    color: #24292f;
+    background-color: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.selector-partido-doble:hover {
+    border-color: #8fa6c1;
+}
+
+.selector-partido-doble:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.celdas-opciones-doble {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-doble {
+    padding: 0.5rem 0.6rem;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1f2328;
+    background-color: #f5f7fa;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 32px;
+    min-width: 32px;
+}
+
+.btn-doble:hover {
+    background-color: #e8eef5;
+    border-color: #8fa6c1;
+}
+
+.btn-doble:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.btn-doble.seleccionado {
+    background-color: #4a90e2;
+    color: #ffffff;
+    border-color: #4a90e2;
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+}
+
+.btn-doble.seleccionado:hover {
+    background-color: #3a7bc8;
+    border-color: #3a7bc8;
+}
+
+/* Responsive para tablets */
+@media (min-width: 768px) {
+    .fila-doble {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .selector-partido-doble {
+        min-width: 200px;
+        font-size: 0.9rem;
+    }
+
+    .btn-doble {
+        font-size: 0.9rem;
+    }
+}
+
+/* Responsive para desktop */
+@media (min-width: 1024px) {
+    .fila-doble {
+        gap: 1.5rem;
+    }
+
+    .selector-partido-doble {
+        min-width: 250px;
+        font-size: 0.95rem;
+    }
+
+    .btn-doble {
+        font-size: 0.95rem;
+    }
+}

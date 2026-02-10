@@ -13,6 +13,11 @@ let quinielaData = {
     dobles: []
 };
 
+// Configura los dobles que cada usuario puede rellenar según la semana pasada (ejemplo: 2 dobles para el primero, 1 para el segundo, 1 para el tercero)
+let n_dobles_primero_semana_pasada = 2;
+let n_dobles_segundo_semana_pasada = 1;
+let n_dobles_tercero_semana_pasada = 1;
+
 // Variable global para almacenar las selecciones actuales (16 posiciones: 0-13 partidos 1-14, 14-15 para 15A/15B)
 let seleccionesActuales = Array(16).fill('');
 
@@ -28,9 +33,51 @@ function todasLasSeleccionesCompletas() {
 }
 
 /**
+ * Verifica si todos los dobles están completos (2 opciones seleccionadas en cada uno)
+ * @returns {boolean} true si todos los dobles están completos o no hay dobles, false en caso contrario
+ */
+function verificarDoblesCompletos() {
+    const seccionDobles = document.getElementById('seccionDobles');
+    
+    // Si no hay sección de dobles, consideramos los dobles como completos
+    if (!seccionDobles) {
+        return true;
+    }
+    
+    const filasDobles = seccionDobles.querySelectorAll('.fila-doble');
+    
+    // Si no hay filas de dobles, consideramos los dobles como completos
+    if (filasDobles.length === 0) {
+        return true;
+    }
+    
+    // Verificar que cada doble tenga: partido seleccionado + exactamente 2 opciones seleccionadas
+    for (let fila of filasDobles) {
+        const selectPartido = fila.querySelector('.selector-partido-doble');
+        const botoneSeleccionados = fila.querySelectorAll('.btn-doble.seleccionado');
+        
+        // Verificar que se haya seleccionado un partido
+        if (!selectPartido || selectPartido.value === '') {
+            console.log(`Doble incompleto: no hay partido seleccionado`);
+            return false;
+        }
+        
+        // Verificar que haya exactamente 2 opciones seleccionadas
+        if (botoneSeleccionados.length !== 2) {
+            console.log(`Doble incompleto: tiene ${botoneSeleccionados.length} opciones seleccionadas, se requieren 2`);
+            return false;
+        }
+    }
+    
+    console.log('Todos los dobles están completos (partido + 2 opciones)');
+    return true;
+}
+
+/**
  * Actualiza la visibilidad del botón guardar según las condiciones:
  * - Solo se muestra si el usuario no tiene pronóstico guardado
- * - Y todas las selecciones están completas
+ * - Y todas las selecciones de pronósticos están completas (16)
+ * - Y todos los dobles están completos (2 opciones por doble)
  */
 function actualizarVisibilidadBotonGuardar() {
     const btnGuardar = document.getElementById('btnGuardarPronostico');
@@ -40,10 +87,16 @@ function actualizarVisibilidadBotonGuardar() {
     const tienePronostico = usuarioActualSeleccionado && 
                            quinielaData.pronosticos.find(p => p.usuario === usuarioActualSeleccionado);
 
-    // Mostrar botón solo si no tiene pronóstico Y todas las selecciones están completas
-    if (!tienePronostico && todasLasSeleccionesCompletas()) {
+    // Verificar si todas las selecciones están completas
+    const seleccionesCompletas = todasLasSeleccionesCompletas();
+    
+    // Verificar si todos los dobles están completos
+    const doblesCompletos = verificarDoblesCompletos();
+    
+    // Mostrar botón solo si: no tiene pronóstico Y selecciones completas Y dobles completos
+    if (!tienePronostico && seleccionesCompletas && doblesCompletos) {
         btnGuardar.style.display = 'block';
-        console.log('Botón guardar mostrado - todas las selecciones completas');
+        console.log('Botón guardar mostrado - selecciones y dobles completos');
     } else {
         btnGuardar.style.display = 'none';
     }
@@ -406,6 +459,37 @@ function cargarPronosticosDelUsuario(nombreUsuario) {
         // Actualizar visibilidad del botón guardar (se mostrará solo si todas las selecciones están completas)
         actualizarVisibilidadBotonGuardar();
     }
+    
+    // Mostrar sección de dobles si el usuario puede hacerlos
+    mostrarSeccionDobles(nombreUsuario);
+    
+    // Actualizar visibilidad del botón guardar después de mostrar dobles
+    actualizarVisibilidadBotonGuardar();
+}
+
+/**
+ * Obtiene el doble guardado para un partido específico
+ * @param {string|number} numeroPartido - Número del partido (1-15)
+ * @returns {string} String con los dos caracteres del doble, o vacío si no existe
+ */
+function obtenerDobleParaPartido(numeroPartido) {
+    if (!quinielaData.dobles || quinielaData.dobles.length === 0) {
+        return '';
+    }
+    
+    const partidoStr = String(numeroPartido);
+    
+    // Buscar el primer doble que coincida con este partido
+    for (let doble of quinielaData.dobles) {
+        for (let p of doble.pronosticos) {
+            if (p.partido === partidoStr && p.pronostico !== '') {
+                console.log(`Doble encontrado para partido ${numeroPartido}: "${p.pronostico}"`);
+                return p.pronostico; // Retorna los 2 caracteres del doble
+            }
+        }
+    }
+    
+    return ''; // No hay doble para este partido
 }
 
 /**
@@ -522,7 +606,10 @@ function mostrarResultados() {
     for (let i = 0; i < 14; i++) {
         const numeroPartido = i + 1;
         const nombrePartido = quinielaData.partidos_jornada[i] || `Partido ${numeroPartido}`;
-        const valor = quinielaData.pronostico_definitivo[i];
+        
+        // Buscar si hay doble para este partido (prevalece sobre pronóstico definitivo)
+        const doblePartido = obtenerDobleParaPartido(numeroPartido);
+        const valor = doblePartido || quinielaData.pronostico_definitivo[i];
 
         const linea = document.createElement('div');
         linea.className = 'linea-resultado';
@@ -536,8 +623,20 @@ function mostrarResultados() {
     const equipos15 = partido15.split(' vs ');
     const equipoLocal = equipos15[0] || 'Eq. Local';
     const equipoVisitante = equipos15[1] || 'Eq. Visitante';
-    const valor15A = quinielaData.pronostico_definitivo[14];
-    const valor15B = quinielaData.pronostico_definitivo[15];
+    
+    // Buscar dobles para partido 15 (prevalecen sobre pronóstico definitivo)
+    const doblePartido15 = obtenerDobleParaPartido(15);
+    let valor15A, valor15B;
+    
+    if (doblePartido15) {
+        // Si hay doble para partido 15, usarlo (2 caracteres)
+        valor15A = doblePartido15[0];
+        valor15B = doblePartido15[1];
+    } else {
+        // Si no hay doble, usar pronóstico definitivo
+        valor15A = quinielaData.pronostico_definitivo[14];
+        valor15B = quinielaData.pronostico_definitivo[15];
+    }
 
     const linea15 = document.createElement('div');
     linea15.className = 'linea-resultado linea-resultado-15';
@@ -548,6 +647,302 @@ function mostrarResultados() {
     // Agregar lista al contenedor
     contenedorResultados.appendChild(listaDiv);
     console.log('Resultados mostrados');
+}
+
+/**
+ * Obtiene el objeto dobles del usuario si existe
+ * @param {string} usuario - Nombre del usuario
+ * @returns {Object|null} Objeto dobles del usuario o null
+ */
+function obtenerDobleDelUsuario(usuario) {
+    if (!quinielaData.dobles || quinielaData.dobles.length === 0) {
+        return null;
+    }
+    const doble = quinielaData.dobles.find(d => d.usuario === usuario);
+    return doble || null;
+}
+
+/**
+ * Obtiene todos los partidos seleccionados en dobles de OTROS usuarios
+ * @param {string} usuarioActual - Nombre del usuario actual
+ * @returns {Array} Array de números de partidos (string) seleccionados por otros usuarios
+ */
+function obtenerPartidosEnUsoDeOtrosUsuarios(usuarioActual) {
+    if (!quinielaData.dobles || quinielaData.dobles.length === 0) return [];
+    
+    const partidosEnUso = [];
+    
+    quinielaData.dobles.forEach(doble => {
+        // Solo incluir dobles de otros usuarios
+        if (doble.usuario !== usuarioActual) {
+            doble.pronosticos.forEach(p => {
+                if (p.partido !== '') {
+                    partidosEnUso.push(p.partido);
+                }
+            });
+        }
+    });
+    
+    console.log(`Partidos en uso de otros usuarios: ${JSON.stringify(partidosEnUso)}`);
+    return partidosEnUso;
+}
+
+/**
+ * Actualiza el estado de los selectores de partido (deshabilita según disponibilidad)
+ * @param {string} usuario - Nombre del usuario
+ */
+function actualizarSelectoresDobles(usuario) {
+    const seccionDobles = document.getElementById('seccionDobles');
+    if (!seccionDobles) return;
+    
+    const selectoresDobles = seccionDobles.querySelectorAll('.selector-partido-doble');
+    
+    // Obtener partidos en uso de otros usuarios
+    const partidosOtrosUsuarios = obtenerPartidosEnUsoDeOtrosUsuarios(usuario);
+    
+    // Obtener partidos seleccionados en este usuario
+    const selectoresArray = Array.from(selectoresDobles);
+    const partidosSeleccionadosEnEsteUsuario = selectoresArray
+        .map(sel => sel.value)
+        .filter(val => val !== '');
+    
+    // Actualizar cada selector
+    selectoresArray.forEach((selector, indiceSelector) => {
+        const options = selector.querySelectorAll('option');
+        
+        options.forEach(option => {
+            if (option.value === '') {
+                // Opción por defecto siempre habilitada
+                option.disabled = false;
+                return;
+            }
+            
+            const partidoValue = option.value;
+            const estadoEnOtros = partidosOtrosUsuarios.includes(partidoValue);
+            
+            // Verificar si está seleccionado en otro selector del mismo usuario
+            const estadoEnEsteUsuario = partidosSeleccionadosEnEsteUsuario.includes(partidoValue) && 
+                                        selector.value !== partidoValue;
+            
+            // Deshabilitar si: está en otros usuarios O está en otro selector del mismo usuario
+            option.disabled = estadoEnOtros || estadoEnEsteUsuario;
+        });
+    });
+    
+    console.log('Selectores de dobles actualizados');
+}
+
+/**
+ * Muestra la sección de dobles si el usuario puede hacer dobles
+ * @param {string} usuario - Nombre del usuario
+ */
+function mostrarSeccionDobles(usuario) {
+    console.log(`Mostrando sección de dobles para usuario: ${usuario}`);
+    
+    // Obtener el doble del usuario
+    const dobleDelUsuario = obtenerDobleDelUsuario(usuario);
+    
+    // Si no existe, no mostrar sección
+    if (!dobleDelUsuario) {
+        console.log(`${usuario} no tiene dobles configurados`);
+        // Remover sección si existe de un usuario anterior
+        const seccionAnterior = document.getElementById('seccionDobles');
+        if (seccionAnterior) {
+            seccionAnterior.remove();
+        }
+        return;
+    }
+    
+    const cantidadDobles = dobleDelUsuario.pronosticos.length;
+    console.log(`${usuario} puede hacer ${cantidadDobles} doble(s)`);
+    
+    // Remover sección anterior si existe
+    const seccionAnterior = document.getElementById('seccionDobles');
+    if (seccionAnterior) {
+        seccionAnterior.remove();
+    }
+    
+    const container = document.getElementById('quinielaContainer');
+    if (!container) {
+        console.error('No se encontró el contenedor #quinielaContainer');
+        return;
+    }
+    
+    // Crear contenedor de dobles
+    const seccionDobles = document.createElement('div');
+    seccionDobles.id = 'seccionDobles';
+    seccionDobles.className = 'seccion-dobles';
+    
+    // Crear label
+    const label = document.createElement('p');
+    label.className = 'label-dobles';
+    label.textContent = `Tienes ${cantidadDobles} doble${cantidadDobles > 1 ? 's' : ''} a rellenar:`;
+    seccionDobles.appendChild(label);
+    
+    // Obtener partidos en uso de otros usuarios
+    const partidosOtrosUsuarios = obtenerPartidosEnUsoDeOtrosUsuarios(usuario);
+    
+    // Crear fila para cada doble
+    for (let i = 0; i < cantidadDobles; i++) {
+        const filaDoble = document.createElement('div');
+        filaDoble.className = 'fila-doble';
+        filaDoble.setAttribute('data-doble-indice', i);
+        
+        // Selector de partido
+        const selectPartido = document.createElement('select');
+        selectPartido.className = 'selector-partido-doble';
+        selectPartido.setAttribute('data-doble-indice', i);
+        
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.textContent = '-- Selecciona un partido --';
+        optionDefault.disabled = false;
+        optionDefault.selected = true;
+        selectPartido.appendChild(optionDefault);
+        
+        // Agregar opciones de partidos (1-14)
+        for (let p = 1; p <= 14; p++) {
+            const option = document.createElement('option');
+            option.value = String(p);
+            option.textContent = `${p}. ${quinielaData.partidos_jornada[p - 1] || `Partido ${p}`}`;
+            
+            // Deshabilitar si está en uso por otros usuarios
+            option.disabled = partidosOtrosUsuarios.includes(String(p));
+            
+            selectPartido.appendChild(option);
+        }
+        
+        // Cargar partido anterior si existe
+        if (dobleDelUsuario.pronosticos[i] && dobleDelUsuario.pronosticos[i].partido) {
+            selectPartido.value = dobleDelUsuario.pronosticos[i].partido;
+        }
+        
+        // Event listener para actualizar otros selectores cuando se cambia uno
+        selectPartido.addEventListener('change', () => {
+            actualizarSelectoresDobles(usuario);
+            // Actualizar visibilidad del botón guardar cuando se cambia el partido
+            actualizarVisibilidadBotonGuardar();
+        });
+        
+        filaDoble.appendChild(selectPartido);
+        
+        // Contenedor de opciones (botones)
+        const celdasOpciones = document.createElement('div');
+        celdasOpciones.className = 'celdas-opciones-doble';
+        
+        // Crear botones para opciones (1, X, 2)
+        const opciones = ['1', 'X', '2'];
+        opciones.forEach(opcion => {
+            const button = document.createElement('button');
+            button.className = 'btn-doble';
+            button.textContent = opcion;
+            button.setAttribute('data-doble-indice', i);
+            button.setAttribute('data-opcion', opcion);
+            
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Obtener botones seleccionados de este doble
+                const botonesFila = filaDoble.querySelectorAll('.btn-doble.seleccionado');
+                const cantidadSeleccionados = botonesFila.length;
+                
+                if (button.classList.contains('seleccionado')) {
+                    // Deseleccionar si ya está seleccionado
+                    button.classList.remove('seleccionado');
+                } else {
+                    // Si ya hay 2 seleccionados, deseleccionar el primero
+                    if (cantidadSeleccionados >= 2) {
+                        botonesFila[0].classList.remove('seleccionado');
+                    }
+                    // Seleccionar el nuevo
+                    button.classList.add('seleccionado');
+                }
+                
+                console.log(`Doble ${i}: opción "${opcion}" clickeada`);
+                
+                // Actualizar visibilidad del botón guardar
+                actualizarVisibilidadBotonGuardar();
+            });
+            
+            celdasOpciones.appendChild(button);
+        });
+        
+        // Cargar selecciones anteriores si existen
+        const pronosticoDoble = dobleDelUsuario.pronosticos[i];
+        if (pronosticoDoble && pronosticoDoble.pronostico) {
+            const chars = pronosticoDoble.pronostico.split('');
+            chars.forEach(char => {
+                const btn = celdasOpciones.querySelector(`button[data-opcion="${char}"]`);
+                if (btn) {
+                    btn.classList.add('seleccionado');
+                }
+            });
+        }
+        
+        filaDoble.appendChild(celdasOpciones);
+        seccionDobles.appendChild(filaDoble);
+    }
+    
+    // Agregar sección al contenedor
+    container.appendChild(seccionDobles);
+    
+    // Actualizar selectores (deshabilitar partidos duplicados en el mismo usuario)
+    actualizarSelectoresDobles(usuario);
+    
+    console.log('Sección de dobles mostrada');
+}
+
+/**
+ * Guarda los dobles del usuario en la estructura de datos
+ * @param {string} usuarioActual - Nombre del usuario actual
+ */
+function guardarDobles(usuarioActual) {
+    console.log(`Guardando dobles para usuario: ${usuarioActual}`);
+    
+    const dobleDelUsuario = obtenerDobleDelUsuario(usuarioActual);
+    
+    // Si no existe objeto dobles para este usuario, no guardar
+    if (!dobleDelUsuario) {
+        console.log(`${usuarioActual} no tiene dobles configurados, omitiendo guardado de dobles`);
+        return;
+    }
+    
+    const seccionDobles = document.getElementById('seccionDobles');
+    if (!seccionDobles) {
+        console.log('No hay sección de dobles en la página');
+        return;
+    }
+    
+    // Recopilar selecciones de dobles
+    const filasDobles = seccionDobles.querySelectorAll('.fila-doble');
+    const nuevosPronosticos = [];
+    
+    filasDobles.forEach((fila, indice) => {
+        const selectPartido = fila.querySelector('.selector-partido-doble');
+        const botoneSeleccionados = fila.querySelectorAll('.btn-doble.seleccionado');
+        
+        const partido = selectPartido.value;
+        
+        // Obtener opciones seleccionadas (máximo 2, en orden de selección)
+        let pronostico = '';
+        botoneSeleccionados.forEach(btn => {
+            pronostico += btn.getAttribute('data-opcion');
+        });
+        
+        nuevosPronosticos.push({
+            partido: partido,
+            pronostico: pronostico
+        });
+        
+        console.log(`Doble ${indice}: partido="${partido}", pronostico="${pronostico}"`);
+    });
+    
+    // Actualizar el objeto dobles del usuario
+    const indiceDoble = quinielaData.dobles.findIndex(d => d.usuario === usuarioActual);
+    if (indiceDoble !== -1) {
+        quinielaData.dobles[indiceDoble].pronosticos = nuevosPronosticos;
+        console.log(`Dobles actualizados para ${usuarioActual}`);
+    }
 }
 
 /**
@@ -582,6 +977,9 @@ async function guardarPronosticos(usuarioActual) {
         console.log(`Nuevo pronóstico creado para ${usuarioActual}`);
     }
 
+    // Guardar dobles antes de guardar en JSONBin
+    guardarDobles(usuarioActual);
+    
     // Guardar en JSONBin
     const success = await saveData();
     if (success) {
@@ -597,7 +995,7 @@ async function guardarPronosticos(usuarioActual) {
         // Mostrar resultados
         mostrarResultados();
         
-        alert(`Pronósticos guardados para ${usuarioActual}`);
+        alert(`Pronósticos y dobles guardados para ${usuarioActual}`);
 
         // Esconder botón guardar después de guardar exitosamente
         const btnGuardar = document.getElementById('btnGuardarPronostico');
