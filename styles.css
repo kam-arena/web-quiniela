@@ -258,6 +258,10 @@ h1 {
     border-bottom: none;
 }
 
+.selector-partido-doble option:disabled {
+    color: #c8cfd5;
+}
+
 /* Sin borde en resultado 14 (antes del partido 15) */
 .linea-resultado:nth-child(14) {
     border-bottom: none;
