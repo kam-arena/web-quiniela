@@ -258,6 +258,11 @@ h1 {
     border-bottom: none;
 }
 
+/* Sin borde en resultado 14 (antes del partido 15) */
+.linea-resultado:nth-child(14) {
+    border-bottom: none;
+}
+
 /* Número del partido */
 .num-partido {
     color: #1f2328;
@@ -335,7 +340,9 @@ h1 {
 
 /* Sección de Dobles */
 #seccionDobles {
+    margin: 0 auto;
     margin-top: 2rem;
+    max-width: 800px;
     padding-top: 1.5rem;
     border-top: 2px solid #d0d7de;
 }
@@ -455,5 +462,34 @@ h1 {
 
     .btn-doble {
         font-size: 0.95rem;
+    }
+}
+
+/* Mobile muy pequeños (≤480px) - Eliminar scroll horizontal */
+@media (max-width: 480px) {
+    .tabla-quiniela td {
+        padding: 0.35rem 0.25rem;
+    }
+
+    .celda-numero {
+        width: 2.5rem;
+        min-width: 2.5rem;
+    }
+
+    .celda-texto {
+        min-width: 100px;
+    }
+
+    .celda-opcion {
+        width: 38px;
+        min-width: 38px;
+        max-width: 38px;
+    }
+
+    .btn-opcion {
+        width: 24px;
+        min-width: 24px;
+        padding: 0.35rem 0.3rem;
+        font-size: 0.75rem;
     }
 }
