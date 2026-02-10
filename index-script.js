@@ -409,6 +409,148 @@ function cargarPronosticosDelUsuario(nombreUsuario) {
 }
 
 /**
+ * Calcula el pronóstico definitivo basado en los votos de todos los usuarios
+ * Para filas 1-14: selecciona el valor más repetido (si hay empate, elige aleatoriamente)
+ * Para filas 15A/15B: convierte a números (M→3), calcula media aritmética redondeada, convierte de vuelta
+ * @returns {string} String de 16 caracteres con el pronóstico definitivo
+ */
+function calcularPronosticoDefinitivo() {
+    if (!quinielaData.pronosticos || quinielaData.pronosticos.length === 0) {
+        console.log('No hay pronósticos para calcular')
+        return '';
+    }
+
+    let pronosticoDefinitivo = '';
+
+    // Procesar posiciones 0-13 (partidos 1-14)
+    for (let posicion = 0; posicion < 14; posicion++) {
+        const votos = {};
+
+        // Contar votos para esta posición
+        quinielaData.pronosticos.forEach(pronostico => {
+            const valor = pronostico.pronostico[posicion];
+            votos[valor] = (votos[valor] || 0) + 1;
+        });
+
+        // Encontrar el valor más repetido
+        const maxVotos = Math.max(...Object.values(votos));
+        const mascRepetidos = Object.keys(votos).filter(clave => votos[clave] === maxVotos);
+
+        // Si hay empate, elegir aleatoriamente
+        const valorSeleccionado = mascRepetidos[Math.floor(Math.random() * mascRepetidos.length)];
+        
+        pronosticoDefinitivo += valorSeleccionado;
+        console.log(`Posición ${posicion + 1}: votos=${JSON.stringify(votos)}, ganador="${valorSeleccionado}"`);
+    }
+
+    // Procesar posiciones 14-15 (partido 15A y 15B)
+    for (let posicion of [14, 15]) {
+        const votos = {};
+        const valoresNumericos = {};
+
+        // Contar votos y mapear a números
+        quinielaData.pronosticos.forEach(pronostico => {
+            const valor = pronostico.pronostico[posicion];
+            votos[valor] = (votos[valor] || 0) + 1;
+            
+            // Mapear a número (0→0, 1→1, 2→2, M→3)
+            if (!valoresNumericos[valor]) {
+                if (valor === 'M') {
+                    valoresNumericos[valor] = 3;
+                } else {
+                    valoresNumericos[valor] = parseInt(valor);
+                }
+            }
+        });
+
+        // Calcular media aritmética ponderada
+        let sumaValores = 0;
+        let totalVotos = 0;
+
+        Object.keys(votos).forEach(valor => {
+            const cantidadVotos = votos[valor];
+            const numeroValor = valoresNumericos[valor];
+            sumaValores += numeroValor * cantidadVotos;
+            totalVotos += cantidadVotos;
+        });
+
+        const promedio = Math.round(sumaValores / totalVotos);
+
+        // Convertir de vuelta a valor (0→0, 1→1, 2→2, 3→M)
+        const valorFinal = promedio === 3 ? 'M' : String(promedio);
+        
+        pronosticoDefinitivo += valorFinal;
+        const posicionEtiqueta = posicion === 14 ? '15A' : '15B';
+        console.log(`Posición ${posicionEtiqueta}: votos=${JSON.stringify(votos)}, promedio=${promedio}, valor="${valorFinal}"`);
+    }
+
+    console.log(`Pronóstico definitivo calculado: "${pronosticoDefinitivo}"`);
+    return pronosticoDefinitivo;
+}
+
+/**
+ * Muestra los resultados computados en el contenedor #resultados
+ */
+function mostrarResultados() {
+    const contenedorResultados = document.getElementById('resultados');
+    if (!contenedorResultados) {
+        console.warn('No se encontró el contenedor #resultados');
+        return;
+    }
+
+    // Si no hay pronóstico definitivo, ocultar todo el contenedor
+    if (!quinielaData.pronostico_definitivo || quinielaData.pronostico_definitivo.length === 0) {
+        contenedorResultados.style.display = 'none';
+        console.log('Contenedor de resultados ocultado (sin pronósticos)');
+        return;
+    }
+
+    // Mostrar contenedor si hay pronósticos
+    contenedorResultados.style.display = 'block';
+
+    // Remover lista anterior si existe
+    const listaAnterior = contenedorResultados.querySelector('.lista-resultados');
+    if (listaAnterior) {
+        listaAnterior.remove();
+    }
+
+    // Crear contenedor para la lista
+    const listaDiv = document.createElement('div');
+    listaDiv.className = 'lista-resultados';
+
+    // Crear líneas para partidos 1-14
+    for (let i = 0; i < 14; i++) {
+        const numeroPartido = i + 1;
+        const nombrePartido = quinielaData.partidos_jornada[i] || `Partido ${numeroPartido}`;
+        const valor = quinielaData.pronostico_definitivo[i];
+
+        const linea = document.createElement('div');
+        linea.className = 'linea-resultado';
+        linea.innerHTML = `<span class="num-partido">${numeroPartido}.</span> <span class="nombre-partido">${nombrePartido}</span> <span class="valor-resultado">${valor}</span>`;
+
+        listaDiv.appendChild(linea);
+    }
+
+    // Crear líneas para partido 15
+    const partido15 = quinielaData.partidos_jornada[14] || 'Partido 15';
+    const equipos15 = partido15.split(' vs ');
+    const equipoLocal = equipos15[0] || 'Eq. Local';
+    const equipoVisitante = equipos15[1] || 'Eq. Visitante';
+    const valor15A = quinielaData.pronostico_definitivo[14];
+    const valor15B = quinielaData.pronostico_definitivo[15];
+
+    const linea15 = document.createElement('div');
+    linea15.className = 'linea-resultado linea-resultado-15';
+    linea15.innerHTML = `<span class="num-partido">15.</span> <span class="nombre-partido">${equipoLocal} - ${equipoVisitante}</span> <span class="valor-resultado">${valor15A}-${valor15B}</span>`;
+
+    listaDiv.appendChild(linea15);
+
+    // Agregar lista al contenedor
+    contenedorResultados.appendChild(listaDiv);
+    console.log('Resultados mostrados');
+}
+
+/**
  * Guarda los pronósticos del usuario actual en JSONBin
  * @param {string} usuarioActual - Nombre del usuario actual
  */
@@ -444,6 +586,17 @@ async function guardarPronosticos(usuarioActual) {
     const success = await saveData();
     if (success) {
         console.log(`Pronósticos guardados exitosamente para ${usuarioActual}: "${pronosticoString}"`);
+        
+        // Calcular y actualizar pronóstico definitivo
+        const pronosticoDefinitivoCalculado = calcularPronosticoDefinitivo();
+        quinielaData.pronostico_definitivo = pronosticoDefinitivoCalculado;
+        
+        // Guardar pronóstico definitivo en JSONBin
+        await saveData();
+        
+        // Mostrar resultados
+        mostrarResultados();
+        
         alert(`Pronósticos guardados para ${usuarioActual}`);
 
         // Esconder botón guardar después de guardar exitosamente
@@ -468,6 +621,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         crearSelectUsuarios();
         // Crear tabla de partidos (oculta inicialmente)
         crearTablaPartidos();
+        
+        // Mostrar resultados si existen pronósticos
+        mostrarResultados();
         
         // Ocultar tabla y botón inicialmente
         const quinielaContainer = document.getElementById('quinielaContainer');
