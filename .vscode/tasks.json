@@ -1,0 +1,54 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Stop Python Server",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "$port = 8000; $connection = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue; if ($connection) { Stop-Process -Id $connection.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 500"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "never",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Start Python Server",
+            "type": "shell",
+            "command": "python",
+            "args": ["-m", "http.server", "8000"],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "."
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "Serving HTTP"
+                }
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Restart Python Server",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Stop Python Server",
+                "Start Python Server"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

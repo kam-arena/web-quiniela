@@ -1,9 +1,31 @@
-// Configuración API JSONBin
-const JSONBIN_CONFIG = {
-    token: '$2a$10$WUVYIohtiAvApiZw9Za60OYVOwyDtt8DqEG5OHLhAgIEdDz57GJOK',
-    api: 'https://api.jsonbin.io/v3',
-    binId: '6985ddb6d0ea881f40a577a1'
-};
+// Configuración API JSONBin (se carga desde config.json)
+let JSONBIN_CONFIG = null;
+
+/**
+ * Carga la configuración desde config.json
+ */
+async function loadConfig() {
+    try {
+        console.log('Cargando configuración...');
+        const response = await fetch('config.json');
+        if (!response.ok) {
+            throw new Error(`Error al cargar config.json: ${response.status}`);
+        }
+        const config = await response.json();
+        const env = config.environment || 'DEV';
+        JSONBIN_CONFIG = {
+            token: config.token,
+            api: config.api,
+            binId: config.environments[env].binId
+        };
+        console.log(`Configuración cargada - Entorno: ${env}`);
+        return true;
+    } catch (error) {
+        console.error('Error al cargar configuración:', error);
+        alert('Error al cargar la configuración. Verifica que config.json existe.');
+        return false;
+    }
+}
 
 // Variable global para almacenar los datos de la quiniela
 let quinielaData = {
@@ -1010,6 +1032,13 @@ async function guardarPronosticos(usuarioActual) {
 
 // Listeners
 document.addEventListener('DOMContentLoaded', async () => {
+
+    // Cargar configuración primero
+    const configLoaded = await loadConfig();
+    if (!configLoaded) {
+        console.error('No se pudo cargar la configuración');
+        return;
+    }
 
     // Cargar datos al iniciar la aplicación
     console.log('Cargando datos de la quiniela...');

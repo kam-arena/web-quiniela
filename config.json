@@ -1,0 +1,13 @@
+{
+  "environment": "PRO",
+  "token": "$2a$10$WUVYIohtiAvApiZw9Za60OYVOwyDtt8DqEG5OHLhAgIEdDz57GJOK",
+  "api": "https://api.jsonbin.io/v3",
+  "environments": {
+    "DEV": {
+      "binId": "698c5697d0ea881f40b1cf45"
+    },
+    "PRO": {
+      "binId": "6985ddb6d0ea881f40a577a1"
+    }
+  }
+}
