@@ -8,12 +8,36 @@
 </head>
 <body>
     <h1>Administración</h1>
+    <div id="seccionResultados">
+        <h2>Resultados de la jornada actual</h2>
+        <div class="form-resultados">
+            <label for="inputResultados">Introduce el resultado de la jornada</label>
+            <div class="container-input-resultados">
+                <input type="text" id="inputResultados" class="input-resultados" maxlength="16" placeholder="1X2X1X2X1X2X1X0M">
+                <button id="btnCalcularResultados" class="btn-success">✓</button>
+            </div>
+        </div>
+        <div id="displayResultados" class="display-resultados" style="display: none;"></div>
+    </div>
     <div id="seccionGestion">
         <h2>Establecer los partidos de la jornada</h2>
         <textarea id="textareaPartidos" placeholder="Pega los 15 partidos, uno por línea..." rows="16"></textarea>
         <div class="botones-admin">
-            <button id="btnModificarJornada" disabled>Modificar</button>
-            <button id="btnIniciarNuevaJornada" disabled>Nueva jornada</button>
+            <button id="btnModificarJornada" disabled>Modificar equipos</button>
+        </div>
+    </div>
+    <div id="seccionUsuarios">
+        <h2>Gestión de Usuarios</h2>
+        <div class="subseccion-usuarios" id="subseccionAñadir">
+            <h3>Añadir nuevo usuario</h3>
+            <div class="form-agregar-usuario">
+                <input type="text" id="inputNuevoUsuario" placeholder="Nombre del nuevo usuario">
+                <button id="btnAñadirUsuario" disabled>+</button>
+            </div>
+        </div>
+        <div class="subseccion-usuarios">
+            <h3>Lista de usuarios actuales</h3>
+            <ul id="listaUsuarios"></ul>
         </div>
     </div>
     <script src="admin-script.js"></script>

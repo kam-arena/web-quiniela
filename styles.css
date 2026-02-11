@@ -657,3 +657,425 @@ h1 {
         font-size: 0.95rem;
     }
 }
+
+/* Sección de Gestión de Usuarios */
+#seccionUsuarios {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#seccionUsuarios h2 {
+    color: #1f2328;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.subseccion-usuarios {
+    margin-bottom: 2rem;
+}
+
+.subseccion-usuarios:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.subseccion-usuarios h3 {
+    color: #24292f;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Formulario agregar usuario */
+.form-agregar-usuario {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#inputNuevoUsuario {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #24292f;
+    background-color: #ffffff;
+    border: 2px solid #d0d7de;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#inputNuevoUsuario:hover {
+    border-color: #8fa6c1;
+}
+
+#inputNuevoUsuario:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+#btnAñadirUsuario {
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 45px;
+}
+
+#btnAñadirUsuario:hover:not(:disabled) {
+    background-color: #3a7bc8;
+}
+
+#btnAñadirUsuario:disabled {
+    background-color: #d0d7de;
+    cursor: not-allowed;
+}
+
+/* Lista de usuarios */
+#listaUsuarios {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f5f7fa;
+    border: 2px solid #d0d7de;
+    border-radius: 6px;
+    overflow-y: auto;
+}
+
+#listaUsuarios li.usuario-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #d0d7de;
+    color: #24292f;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+#listaUsuarios li.usuario-item:last-child {
+    border-bottom: none;
+}
+
+#listaUsuarios li.usuario-item:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.usuario-nombre {
+    flex: 1;
+    word-break: break-word;
+}
+
+/* Botón eliminar usuario */
+.btn-eliminar-usuario {
+    padding: 0.5rem 0.65rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #d1344b;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 36px;
+    flex-shrink: 0;
+}
+
+.btn-eliminar-usuario:hover {
+    background-color: #b1283b;
+    transform: scale(1.05);
+}
+
+.btn-eliminar-usuario:active {
+    transform: scale(0.98);
+}
+
+
+/* Responsive para tablets */
+@media (min-width: 768px) {
+    #seccionUsuarios {
+        padding: 1.5rem;
+        max-width: 800px;
+    }
+
+    #seccionUsuarios h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .subseccion-usuarios h3 {
+        font-size: 1.1rem;
+    }
+
+    .form-agregar-usuario {
+        gap: 0.75rem;
+    }
+
+    #inputNuevoUsuario {
+        padding: 1rem;
+        font-size: 1.05rem;
+    }
+
+    #btnAñadirUsuario {
+        padding: 1rem 1.2rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-eliminar-usuario {
+        padding: 0.65rem 0.8rem;
+    }
+}
+
+/* Responsive para desktop */
+@media (min-width: 1024px) {
+    #seccionUsuarios {
+        padding: 2rem;
+        max-width: 800px;
+    }
+
+    #seccionUsuarios h2 {
+        font-size: 1.75rem;
+    }
+
+    .subseccion-usuarios h3 {
+        font-size: 1.15rem;
+    }
+}
+
+/* ============================================ */
+/* Sección de Resultados */
+/* ============================================ */
+
+#seccionResultados {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#seccionResultados h2 {
+    color: #1f2328;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Formulario de resultados */
+.form-resultados {
+    margin-bottom: 1.5rem;
+}
+
+.form-resultados label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #1f2328;
+    font-size: 0.95rem;
+}
+
+.container-input-resultados {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.input-resultados {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    color: #24292f;
+    background-color: #ffffff;
+    border: 2px solid #d0d7de;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.input-resultados:hover {
+    border-color: #8fa6c1;
+}
+
+.input-resultados:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.input-resultados::placeholder {
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* Botón verde de éxito */
+.btn-success {
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #2e7d32;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 45px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: #1b5e20;
+    box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+}
+
+.btn-success:focus:not(:disabled) {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.btn-success:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-success:disabled {
+    background-color: #a0a8b5;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Contenedor de resultados */
+.display-resultados {
+    background-color: #f5f7fa;
+    border: 2px solid #d0d7de;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    font-family: 'Courier New', 'Courier', monospace;
+}
+
+.resultado-seccion {
+    margin-bottom: 1rem;
+}
+
+.resultado-seccion:last-child {
+    margin-bottom: 0;
+}
+
+.titulo-seccion-resultado {
+    color: #1f2328;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+/* Línea de resultado con formato tabulado */
+.linea-resultado-admin {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0.15rem 0;
+    line-height: 1.3;
+}
+
+.linea-indentada {
+    padding-left: 0.5rem;
+}
+
+.linea-indentada .nombre-resultado::before {
+    content: "- ";
+    color: #4a90e2;
+    margin-right: 0.25rem;
+}
+
+.nombre-resultado {
+    color: #24292f;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.puntos-resultado {
+    border-bottom: 1px dotted #8fa6c1;
+    min-width: 1rem;
+    height: 0.5rem;
+    margin: 0 0.25rem;
+}
+
+.valor-resultado-admin {
+    color: #4a90e2;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: right;
+    min-width: 2rem;
+}
+
+/* Responsive para tablets */
+@media (min-width: 768px) {
+    #seccionResultados {
+        padding: 1.5rem;
+        max-width: 800px;
+    }
+
+    #seccionResultados h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-resultados label {
+        font-size: 1rem;
+    }
+
+    .input-resultados {
+        padding: 1rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-success {
+        padding: 1rem 1.2rem;
+        font-size: 1.05rem;
+    }
+
+    .display-resultados {
+        padding: 1.5rem;
+    }
+
+    .titulo-seccion-resultado {
+        font-size: 0.95rem;
+    }
+
+    .nombre-resultado {
+        font-size: 0.9rem;
+    }
+
+    .valor-resultado-admin {
+        font-size: 0.9rem;
+    }
+}
+
+/* Responsive para desktop */
+@media (min-width: 1024px) {
+    #seccionResultados {
+        padding: 2rem;
+        max-width: 800px;
+    }
+
+    #seccionResultados h2 {
+        font-size: 1.75rem;
+    }
+
+    .titulo-seccion-resultado {
+        font-size: 1rem;
+    }
+}
