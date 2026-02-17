@@ -438,7 +438,7 @@ function calcularAciertosDefinitivo(resultado) {
         for (const dobleEntry of quinielaData.dobles) {
             for (const pronosticoDoble of dobleEntry.pronosticos) {
                 const partidoIndex = parseInt(pronosticoDoble.partido);
-                if (partidoIndex === i && pronosticoDoble.pronostico && pronosticoDoble.pronostico.length === 2) {
+                if (partidoIndex === i + 1 && pronosticoDoble.pronostico && pronosticoDoble.pronostico.length === 2) {
                     dobleEncontrado = pronosticoDoble.pronostico;
                     break;
                 }
