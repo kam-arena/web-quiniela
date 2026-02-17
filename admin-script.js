@@ -432,34 +432,39 @@ function calcularAciertosDefinitivo(resultado) {
     // Comprobar partidos 1-14
     for (let i = 0; i < 14; i++) {
         const caracterResultado = resultado[i];
-        let caracterDefinitivo = pronosticoDefinitivo[i];
         
-        // Verificar si hay un doble para este partido
-        let tieneDoble = false;
+        // Buscar si hay un doble para este partido
+        let dobleEncontrado = null;
         for (const dobleEntry of quinielaData.dobles) {
             for (const pronosticoDoble of dobleEntry.pronosticos) {
-                // El partido en dobles puede ser nombre o índice (0-based)
                 const partidoIndex = parseInt(pronosticoDoble.partido);
                 if (partidoIndex === i && pronosticoDoble.pronostico && pronosticoDoble.pronostico.length === 2) {
-                    // Hay un doble para este partido
-                    tieneDoble = true;
-                    const char1 = pronosticoDoble.pronostico[0];
-                    const char2 = pronosticoDoble.pronostico[1];
-                    if (caracterResultado === char1 || caracterResultado === char2) {
-                        aciertos++;
-                        console.log(`Partido ${i + 1}: Acierto con doble (${char1}/${char2})`);
-                    }
+                    dobleEncontrado = pronosticoDoble.pronostico;
                     break;
                 }
             }
-            if (tieneDoble) break;
+            if (dobleEncontrado) break;
         }
         
-        // Si no hay doble, comparar normalmente
-        if (!tieneDoble) {
+        // Comparar contra el doble si existe, sino contra el pronóstico definitivo
+        if (dobleEncontrado) {
+            // Si hay doble: comparar contra los dos caracteres del doble
+            const char1 = dobleEncontrado[0];
+            const char2 = dobleEncontrado[1];
+            if (caracterResultado === char1 || caracterResultado === char2) {
+                aciertos++;
+                console.log(`Partido ${i + 1}: Acierto con doble (${char1}/${char2})`);
+            } else {
+                console.log(`Partido ${i + 1}: Error (no coincidió con doble ${char1}/${char2})`);
+            }
+        } else {
+            // Si no hay doble: comparar contra pronóstico definitivo
+            const caracterDefinitivo = pronosticoDefinitivo[i];
             if (caracterResultado === caracterDefinitivo) {
                 aciertos++;
                 console.log(`Partido ${i + 1}: Acierto`);
+            } else {
+                console.log(`Partido ${i + 1}: Error (esperado: ${caracterDefinitivo}, resultado: ${caracterResultado})`);
             }
         }
     }
@@ -470,6 +475,8 @@ function calcularAciertosDefinitivo(resultado) {
     if (resultadoP15 === definitivoP15) {
         aciertos++;
         console.log('Partido 15: Acierto');
+    } else {
+        console.log(`Partido 15: Error (esperado: ${definitivoP15}, resultado: ${resultadoP15})`);
     }
     
     console.log(`Total de aciertos del pronóstico definitivo: ${aciertos}`);
