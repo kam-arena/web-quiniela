@@ -237,7 +237,7 @@ h1 {
 /* Lista de resultados */
 .lista-resultados {
     font-family: 'Courier New', 'Courier', monospace;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1.8;
     color: #24292f;
     margin: 0 auto;
@@ -285,6 +285,7 @@ h1 {
 
 /* Valor del resultado */
 .valor-resultado {
+    color: #4a90e2;
     font-weight: 600;
     width: 3rem;
     text-align: center;
@@ -311,7 +312,7 @@ h1 {
     }
 
     .lista-resultados {
-        font-size: 0.9rem;
+        font-size: 1.05rem;
     }
 
     .linea-resultado {
@@ -331,7 +332,7 @@ h1 {
     }
 
     .lista-resultados {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
     }
 
     .linea-resultado {

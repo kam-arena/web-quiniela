@@ -769,8 +769,6 @@ function mostrarHistorico() {
         console.log(`${usuariosFinales[2]}: 1 doble`);
     }
 
-    console.log('************');
-
     // Construir HTML con mismo formato que admin
     let html = '<div class="resultado-seccion">';
     html += '<div class="linea-resultado-admin">';
