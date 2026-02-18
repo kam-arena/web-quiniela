@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: #f5f7fa;
     color: #24292f;
     line-height: 1.6;
@@ -217,7 +217,7 @@ h1 {
 
 /* Lista de resultados */
 .lista-resultados {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     font-size: 0.85rem;
     line-height: 1.8;
     color: #24292f;
@@ -882,7 +882,7 @@ h1 {
     }
 
     .lista-resultados {
-        font-size: 1.05rem;
+        font-size: 0.85rem;
     }
 
     .linea-resultado {
@@ -1024,7 +1024,7 @@ h1 {
     }
 
     .lista-resultados {
-        font-size: 1.1rem;
+        font-size: 0.85rem;
     }
 
     .linea-resultado {
