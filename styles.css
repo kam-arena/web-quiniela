@@ -85,7 +85,7 @@ h1 {
 
 /* Contenedor de tabla */
 #quinielaContainer {
-    max-width: 100%;
+    max-width: 800px;
     margin: 0 auto 2rem;
     background: #ffffff;
     padding: 1rem;
@@ -219,7 +219,7 @@ h1 {
 }
 /* Contenedor de Resultados */
 #resultados {
-    max-width: 100%;
+    max-width: 800px;
     margin: 2rem auto 0;
     background: #ffffff;
     padding: 1rem;
@@ -240,7 +240,6 @@ h1 {
     font-size: 0.85rem;
     line-height: 1.8;
     color: #24292f;
-    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -303,7 +302,6 @@ h1 {
 /* Responsive para tablets */
 @media (min-width: 768px) {
     #resultados {
-        max-width: 100%;
         padding: 1.5rem;
         margin: 2rem auto 0;
     }
@@ -326,7 +324,7 @@ h1 {
 /* Responsive para desktop */
 @media (min-width: 1024px) {
     #resultados {
-        max-width: 100%;
+        max-width: 800px;
     }
 
     #resultados h2 {
@@ -339,6 +337,52 @@ h1 {
 
     .linea-resultado {
         padding: 1rem 0;
+    }
+}
+
+/* Contenedor de Histórico */
+#historicoResultados {
+    max-width: 800px;
+    margin: 2rem auto 0;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#historicoResultados h2 {
+    color: #1f2328;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Contenido del histórico */
+.historico-contenido {
+    width: 100%;
+}
+
+/* Responsive para tablets - Histórico */
+@media (min-width: 768px) {
+    #historicoResultados {
+        padding: 1.5rem;
+        margin: 2rem auto 0;
+    }
+
+    #historicoResultados h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Responsive para desktop - Histórico */
+@media (min-width: 1024px) {
+    #historicoResultados {
+        max-width: 800px;
+    }
+
+    #historicoResultados h2 {
+        font-size: 1.75rem;
     }
 }
 

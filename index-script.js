@@ -32,7 +32,8 @@ let quinielaData = {
     usuarios: [],
     partidos_jornada: [],
     pronosticos: [],
-    dobles: []
+    dobles: [],
+    historico: []
 };
 
 // Configura los dobles que cada usuario puede rellenar según la semana pasada (ejemplo: 2 dobles para el primero, 1 para el segundo, 1 para el tercero)
@@ -672,6 +673,146 @@ function mostrarResultados() {
 }
 
 /**
+ * Muestra el histórico de resultados de la última quiniela
+ */
+function mostrarHistorico() {
+    const contenedorHistorico = document.getElementById('historicoResultados');
+    if (!contenedorHistorico) {
+        console.warn('No se encontró el contenedor #historicoResultados');
+        return;
+    }
+
+    // Si no hay histórico o está vacío, ocultar el contenedor
+    if (!quinielaData.historico || quinielaData.historico.length === 0) {
+        contenedorHistorico.style.display = 'none';
+        console.log('Contenedor de histórico ocultado (sin datos)');
+        return;
+    }
+
+    // Obtener el último elemento del histórico
+    const ultimoHistorico = quinielaData.historico[quinielaData.historico.length - 1];
+    
+    if (!ultimoHistorico || !ultimoHistorico.aciertos) {
+        contenedorHistorico.style.display = 'none';
+        console.log('Último histórico no contiene aciertos válidos');
+        return;
+    }
+
+    // Mostrar contenedor
+    contenedorHistorico.style.display = 'block';
+
+    // Remover contenido anterior si existe
+    const contenidoAnterior = contenedorHistorico.querySelector('.historico-contenido');
+    if (contenidoAnterior) {
+        contenidoAnterior.remove();
+    }
+
+    // Crear contenedor para el histórico
+    const contenidoDiv = document.createElement('div');
+    contenidoDiv.className = 'historico-contenido';
+
+    // Extraer datos del último histórico
+    const aciertos = ultimoHistorico.aciertos;
+    let aciertosTotal = 0;
+    const aciertosPorUsuario = {};
+
+    // Procesar aciertos del histórico
+    for (const acierto of aciertos) {
+        if (acierto.nombre === 'totales') {
+            aciertosTotal = acierto.cantidad;
+        } else {
+            aciertosPorUsuario[acierto.nombre] = acierto.cantidad;
+        }
+    }
+
+    // CALCULAR dobles basándose en los aciertos del histórico
+    // Convertir a array con {usuario, cantidad}
+    const usuariosConAciertos = Object.entries(aciertosPorUsuario)
+        .map(([usuario, cantidad]) => ({ usuario, cantidad }));
+    
+    // Agrupar por cantidad de aciertos
+    const gruposPorAciertos = {};
+    for (const entry of usuariosConAciertos) {
+        if (!gruposPorAciertos[entry.cantidad]) {
+            gruposPorAciertos[entry.cantidad] = [];
+        }
+        gruposPorAciertos[entry.cantidad].push(entry.usuario);
+    }
+    
+    // Ordenar grupos por aciertos descendente
+    const aciertoUnicos = Object.keys(gruposPorAciertos)
+        .map(Number)
+        .sort((a, b) => b - a);
+    
+    // Crear lista ordenada con desempate aleatorio dentro de cada grupo
+    const usuariosFinales = [];
+    for (const acierto of aciertoUnicos) {
+        const grupo = gruposPorAciertos[acierto];
+        const grupoMezclado = grupo.sort(() => Math.random() - 0.5);
+        usuariosFinales.push(...grupoMezclado);
+    }
+    
+    console.log('Orden final de usuarios para dobles (desde histórico):', usuariosFinales);
+    
+    // Asignar dobles: 1º = 2 dobles, 2º = 1 doble, 3º = 1 doble
+    const doblesCalculados = {};
+    if (usuariosFinales.length >= 1) {
+        doblesCalculados[usuariosFinales[0]] = 2;
+        console.log(`${usuariosFinales[0]}: 2 dobles`);
+    }
+    if (usuariosFinales.length >= 2) {
+        doblesCalculados[usuariosFinales[1]] = 1;
+        console.log(`${usuariosFinales[1]}: 1 doble`);
+    }
+    if (usuariosFinales.length >= 3) {
+        doblesCalculados[usuariosFinales[2]] = 1;
+        console.log(`${usuariosFinales[2]}: 1 doble`);
+    }
+
+    console.log('************');
+
+    // Construir HTML con mismo formato que admin
+    let html = '<div class="resultado-seccion">';
+    html += '<div class="linea-resultado-admin">';
+    html += '<span class="nombre-resultado">Aciertos</span>';
+    html += '<span class="puntos-resultado"></span>';
+    html += `<span class="valor-resultado-admin">${aciertosTotal}</span>`;
+    html += '</div>';
+    html += '</div>';
+
+    // Aciertos por usuario (ordenados descendentemente)
+    const usuariosOrdenados = Object.entries(aciertosPorUsuario)
+        .sort(([, a], [, b]) => b - a);
+    
+    html += '<div class="resultado-seccion">';
+    html += '<div class="titulo-seccion-resultado">Aciertos por usuario:</div>';
+    for (const [usuario, cantidad] of usuariosOrdenados) {
+        html += '<div class="linea-resultado-admin linea-indentada">';
+        html += `<span class="nombre-resultado">${usuario}</span>`;
+        html += '<span class="puntos-resultado"></span>';
+        html += `<span class="valor-resultado-admin">${cantidad}</span>`;
+        html += '</div>';
+    }
+    html += '</div>';
+
+    // Reparto de dobles (calculado desde el histórico, no desde quinielaData.dobles)
+    html += '<div class="resultado-seccion">';
+    html += '<div class="titulo-seccion-resultado">Reparto de dobles:</div>';
+    for (const [usuario, numDobles] of Object.entries(doblesCalculados)) {
+        html += '<div class="linea-resultado-admin linea-indentada">';
+        html += `<span class="nombre-resultado">${usuario}</span>`;
+        html += '<span class="puntos-resultado"></span>';
+        html += `<span class="valor-resultado-admin">${numDobles}</span>`;
+        html += '</div>';
+    }
+    html += '</div>';
+
+    contenidoDiv.innerHTML = html;
+    contenedorHistorico.appendChild(contenidoDiv);
+    console.log('Histórico mostrado desde último registro del histórico');
+}
+
+/**
  * Obtiene el objeto dobles del usuario si existe
  * @param {string} usuario - Nombre del usuario
  * @returns {Object|null} Objeto dobles del usuario o null
@@ -1051,6 +1192,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Mostrar resultados si existen pronósticos
         mostrarResultados();
+        
+        // Mostrar histórico si existe
+        mostrarHistorico();
         
         // Ocultar tabla y botón inicialmente
         const quinielaContainer = document.getElementById('quinielaContainer');

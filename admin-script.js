@@ -34,7 +34,8 @@ let quinielaData = {
     partidos_jornada: [],
     pronosticos: [],
     dobles: [],
-    pronostico_definitivo: ''
+    pronostico_definitivo: '',
+    historico: []
 };
 
 /**
@@ -673,6 +674,35 @@ async function procesarResultados() {
         // Calcular aciertos por usuario
         const aciertosPorUsuario = calcularAciertosPorUsuario(resultado);
         
+        // Guardar en histórico antes de actualizar dobles
+        if (!quinielaData.historico) {
+            quinielaData.historico = [];
+        }
+        
+        // Crear array de aciertos para el histórico
+        const aciertosHistorico = [
+            {
+                nombre: 'totales',
+                cantidad: aciertosTotal
+            }
+        ];
+        
+        // Añadir aciertos de cada usuario
+        for (const [usuario, cantidad] of Object.entries(aciertosPorUsuario)) {
+            aciertosHistorico.push({
+                nombre: usuario,
+                cantidad: cantidad
+            });
+        }
+        
+        // Añadir entrada al histórico
+        quinielaData.historico.push({
+            fecha: quinielaData.fecha_inicio_quiniela,
+            aciertos: aciertosHistorico
+        });
+        
+        console.log('Histórico actualizado:', quinielaData.historico);
+        
         // Asignar dobles
         const doblesAsignados = asignarDobles(aciertosPorUsuario);
         
@@ -680,7 +710,7 @@ async function procesarResultados() {
         quinielaData.dobles = doblesAsignados;
         console.log('Estructura de dobles actualizada:', quinielaData.dobles);
         
-        // Guardar en JSONBin
+        // Guardar en JSONBin (una sola llamada con histórico y dobles)
         const guardadoExitoso = await saveData();
         
         if (guardadoExitoso) {
