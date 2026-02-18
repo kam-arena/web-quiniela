@@ -1,4 +1,6 @@
+/* ============================================ */
 /* Reset y estilos base */
+/* ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -58,29 +60,6 @@ h1 {
     outline: none;
     border-color: #4a90e2;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-/* Tablets y pantallas medianas */
-@media (min-width: 768px) {
-    body {
-        padding: 2rem;
-    }
-
-    h1 {
-        font-size: 2.25rem;
-        margin-bottom: 2.5rem;
-    }
-
-    #selectUsuarioContainer {
-        padding: 2rem;
-    }
-}
-
-/* Escritorio */
-@media (min-width: 1024px) {
-    h1 {
-        font-size: 2.5rem;
-    }
 }
 
 /* Contenedor de tabla */
@@ -184,7 +163,8 @@ h1 {
 }
 
 /* Sin borde inferior de la última fila */
-.tabla-quiniela tr:last-child, .tabla-quiniela tr.fila-partido-15 {
+.tabla-quiniela tr:last-child,
+.tabla-quiniela tr.fila-partido-15 {
     border-bottom: none;
 }
 
@@ -217,6 +197,7 @@ h1 {
 #btnGuardarPronostico:active {
     transform: scale(0.98);
 }
+
 /* Contenedor de Resultados */
 #resultados {
     max-width: 800px;
@@ -236,8 +217,8 @@ h1 {
 
 /* Lista de resultados */
 .lista-resultados {
-    font-family: 'Courier New', 'Courier', monospace;
-    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 0.85rem;
     line-height: 1.8;
     color: #24292f;
     margin: 0 auto;
@@ -299,47 +280,6 @@ h1 {
     border-top: 2px solid #d0d7de;
 }
 
-/* Responsive para tablets */
-@media (min-width: 768px) {
-    #resultados {
-        padding: 1.5rem;
-        margin: 2rem auto 0;
-    }
-
-    #resultados h2 {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .lista-resultados {
-        font-size: 1.05rem;
-    }
-
-    .linea-resultado {
-        gap: 1rem;
-        padding: 0.75rem 0;
-    }
-}
-
-/* Responsive para desktop */
-@media (min-width: 1024px) {
-    #resultados {
-        max-width: 800px;
-    }
-
-    #resultados h2 {
-        font-size: 1.75rem;
-    }
-
-    .lista-resultados {
-        font-size: 1.1rem;
-    }
-
-    .linea-resultado {
-        padding: 1rem 0;
-    }
-}
-
 /* Contenedor de Histórico */
 #historicoResultados {
     max-width: 800px;
@@ -360,30 +300,6 @@ h1 {
 /* Contenido del histórico */
 .historico-contenido {
     width: 100%;
-}
-
-/* Responsive para tablets - Histórico */
-@media (min-width: 768px) {
-    #historicoResultados {
-        padding: 1.5rem;
-        margin: 2rem auto 0;
-    }
-
-    #historicoResultados h2 {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
-    }
-}
-
-/* Responsive para desktop - Histórico */
-@media (min-width: 1024px) {
-    #historicoResultados {
-        max-width: 800px;
-    }
-
-    #historicoResultados h2 {
-        font-size: 1.75rem;
-    }
 }
 
 /* Sección de Dobles */
@@ -437,10 +353,6 @@ h1 {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
-.selector-partido-doble option:disabled {
-    color: #c8cfd5;
-}
-
 .celdas-opciones-doble {
     display: flex;
     gap: 0.5rem;
@@ -482,68 +394,6 @@ h1 {
 .btn-doble.seleccionado:hover {
     background-color: #3a7bc8;
     border-color: #3a7bc8;
-}
-
-/* Responsive para tablets */
-@media (min-width: 768px) {
-    .fila-doble {
-        gap: 1rem;
-        padding: 1rem;
-    }
-
-    .selector-partido-doble {
-        min-width: 200px;
-        font-size: 0.9rem;
-    }
-
-    .btn-doble {
-        font-size: 0.9rem;
-    }
-}
-
-/* Responsive para desktop */
-@media (min-width: 1024px) {
-    .fila-doble {
-        gap: 1.5rem;
-    }
-
-    .selector-partido-doble {
-        min-width: 250px;
-        font-size: 0.95rem;
-    }
-
-    .btn-doble {
-        font-size: 0.95rem;
-    }
-}
-
-/* Mobile muy pequeños (≤480px) - Eliminar scroll horizontal */
-@media (max-width: 480px) {
-    .tabla-quiniela td {
-        padding: 0.35rem 0.25rem;
-    }
-
-    .celda-numero {
-        width: 2.5rem;
-        min-width: 2.5rem;
-    }
-
-    .celda-texto {
-        min-width: 100px;
-    }
-
-    .celda-opcion {
-        width: 38px;
-        min-width: 38px;
-        max-width: 38px;
-    }
-
-    .btn-opcion {
-        width: 24px;
-        min-width: 24px;
-        padding: 0.35rem 0.3rem;
-        font-size: 0.75rem;
-    }
 }
 
 /* Sección de Administración */
@@ -660,46 +510,6 @@ h1 {
     background-color: #a0a8b5;
     cursor: not-allowed;
     opacity: 0.7;
-}
-
-/* Responsive para tablets */
-@media (min-width: 768px) {
-    #seccionGestion {
-        padding: 1.5rem;
-        max-width: 800px;
-    }
-
-    #seccionGestion h2 {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    #textareaPartidos {
-        padding: 1rem;
-        font-size: 0.9rem;
-    }
-
-    #btnIniciarNuevaJornada {
-        padding: 0.75rem 2.5rem;
-        font-size: 1.1rem;
-    }
-}
-
-/* Responsive para desktop */
-@media (min-width: 1024px) {
-    #seccionGestion {
-        padding: 2rem;
-        max-width: 800px;
-    }
-
-    #seccionGestion h2 {
-        font-size: 1.75rem;
-    }
-
-    #textareaPartidos {
-        padding: 1rem;
-        font-size: 0.95rem;
-    }
 }
 
 /* Sección de Gestión de Usuarios */
@@ -842,58 +652,6 @@ h1 {
 
 .btn-eliminar-usuario:active {
     transform: scale(0.98);
-}
-
-
-/* Responsive para tablets */
-@media (min-width: 768px) {
-    #seccionUsuarios {
-        padding: 1.5rem;
-        max-width: 800px;
-    }
-
-    #seccionUsuarios h2 {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .subseccion-usuarios h3 {
-        font-size: 1.1rem;
-    }
-
-    .form-agregar-usuario {
-        gap: 0.75rem;
-    }
-
-    #inputNuevoUsuario {
-        padding: 1rem;
-        font-size: 1.05rem;
-    }
-
-    #btnAñadirUsuario {
-        padding: 1rem 1.2rem;
-        font-size: 1.05rem;
-    }
-
-    .btn-eliminar-usuario {
-        padding: 0.65rem 0.8rem;
-    }
-}
-
-/* Responsive para desktop */
-@media (min-width: 1024px) {
-    #seccionUsuarios {
-        padding: 2rem;
-        max-width: 800px;
-    }
-
-    #seccionUsuarios h2 {
-        font-size: 1.75rem;
-    }
-
-    .subseccion-usuarios h3 {
-        font-size: 1.15rem;
-    }
 }
 
 /* ============================================ */
@@ -1065,8 +823,149 @@ h1 {
     min-width: 2rem;
 }
 
-/* Responsive para tablets */
+/* ============================================ */
+/* MOBILE PEQUEÑOS (≤480px) */
+/* ============================================ */
+@media (max-width: 480px) {
+    .tabla-quiniela td {
+        padding: 0.35rem 0.25rem;
+    }
+
+    .celda-numero {
+        width: 2.5rem;
+        min-width: 2.5rem;
+    }
+
+    .celda-texto {
+        min-width: 100px;
+    }
+
+    .celda-opcion {
+        width: 38px;
+        min-width: 38px;
+        max-width: 38px;
+    }
+
+    .btn-opcion {
+        width: 24px;
+        min-width: 24px;
+        padding: 0.35rem 0.3rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================ */
+/* TABLETS Y PANTALLAS MEDIANAS (≥768px) */
+/* ============================================ */
 @media (min-width: 768px) {
+    body {
+        padding: 2rem;
+    }
+
+    h1 {
+        font-size: 2.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    #selectUsuarioContainer {
+        padding: 2rem;
+    }
+
+    #resultados {
+        padding: 1.5rem;
+        margin: 2rem auto 0;
+    }
+
+    #resultados h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .lista-resultados {
+        font-size: 1.05rem;
+    }
+
+    .linea-resultado {
+        gap: 1rem;
+        padding: 0.75rem 0;
+    }
+
+    #historicoResultados {
+        padding: 1.5rem;
+        margin: 2rem auto 0;
+    }
+
+    #historicoResultados h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .fila-doble {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .selector-partido-doble {
+        min-width: 200px;
+        font-size: 0.9rem;
+    }
+
+    .btn-doble {
+        font-size: 0.9rem;
+    }
+
+    #seccionGestion {
+        padding: 1.5rem;
+        max-width: 800px;
+    }
+
+    #seccionGestion h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    #textareaPartidos {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    #btnIniciarNuevaJornada {
+        padding: 0.75rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    #seccionUsuarios {
+        padding: 1.5rem;
+        max-width: 800px;
+    }
+
+    #seccionUsuarios h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .subseccion-usuarios h3 {
+        font-size: 1.1rem;
+    }
+
+    .form-agregar-usuario {
+        gap: 0.75rem;
+    }
+
+    #inputNuevoUsuario {
+        padding: 1rem;
+        font-size: 1.05rem;
+    }
+
+    #btnAñadirUsuario {
+        padding: 1rem 1.2rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-eliminar-usuario {
+        padding: 0.65rem 0.8rem;
+    }
+
     #seccionResultados {
         padding: 1.5rem;
         max-width: 800px;
@@ -1108,8 +1007,78 @@ h1 {
     }
 }
 
-/* Responsive para desktop */
+/* ============================================ */
+/* ESCRITORIO (≥1024px) */
+/* ============================================ */
 @media (min-width: 1024px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    #resultados {
+        max-width: 800px;
+    }
+
+    #resultados h2 {
+        font-size: 1.75rem;
+    }
+
+    .lista-resultados {
+        font-size: 1.1rem;
+    }
+
+    .linea-resultado {
+        padding: 1rem 0;
+    }
+
+    #historicoResultados {
+        max-width: 800px;
+    }
+
+    #historicoResultados h2 {
+        font-size: 1.75rem;
+    }
+
+    .fila-doble {
+        gap: 1.5rem;
+    }
+
+    .selector-partido-doble {
+        min-width: 250px;
+        font-size: 0.95rem;
+    }
+
+    .btn-doble {
+        font-size: 0.95rem;
+    }
+
+    #seccionGestion {
+        padding: 2rem;
+        max-width: 800px;
+    }
+
+    #seccionGestion h2 {
+        font-size: 1.75rem;
+    }
+
+    #textareaPartidos {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+
+    #seccionUsuarios {
+        padding: 2rem;
+        max-width: 800px;
+    }
+
+    #seccionUsuarios h2 {
+        font-size: 1.75rem;
+    }
+
+    .subseccion-usuarios h3 {
+        font-size: 1.15rem;
+    }
+
     #seccionResultados {
         padding: 2rem;
         max-width: 800px;
