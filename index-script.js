@@ -36,11 +36,6 @@ let quinielaData = {
     historico: []
 };
 
-// Configura los dobles que cada usuario puede rellenar según la semana pasada (ejemplo: 2 dobles para el primero, 1 para el segundo, 1 para el tercero)
-let n_dobles_primero_semana_pasada = 2;
-let n_dobles_segundo_semana_pasada = 1;
-let n_dobles_tercero_semana_pasada = 1;
-
 // Variable global para almacenar las selecciones actuales (16 posiciones: 0-13 partidos 1-14, 14-15 para 15A/15B)
 let seleccionesActuales = Array(16).fill('');
 
@@ -725,48 +720,19 @@ function mostrarHistorico() {
         }
     }
 
-    // CALCULAR dobles basándose en los aciertos del histórico
-    // Convertir a array con {usuario, cantidad}
-    const usuariosConAciertos = Object.entries(aciertosPorUsuario)
-        .map(([usuario, cantidad]) => ({ usuario, cantidad }));
+    // NUEVA LÓGICA: Obtener dobles desde el campo 'dobles' del JSON
+    const usuariosConDobles = obtenerUsuariosConDobles();
     
-    // Agrupar por cantidad de aciertos
-    const gruposPorAciertos = {};
-    for (const entry of usuariosConAciertos) {
-        if (!gruposPorAciertos[entry.cantidad]) {
-            gruposPorAciertos[entry.cantidad] = [];
-        }
-        gruposPorAciertos[entry.cantidad].push(entry.usuario);
-    }
+    // Ordenar por cantidad de dobles (descendente) y aciertos como desempate
+    const usuariosConDoblesOrdenados = ordenarPorDoblesYAciertos(usuariosConDobles);
     
-    // Ordenar grupos por aciertos descendente
-    const aciertoUnicos = Object.keys(gruposPorAciertos)
-        .map(Number)
-        .sort((a, b) => b - a);
+    console.log('Orden final de usuarios para dobles (desde campo dobles del JSON):', usuariosConDoblesOrdenados);
     
-    // Crear lista ordenada con desempate aleatorio dentro de cada grupo
-    const usuariosFinales = [];
-    for (const acierto of aciertoUnicos) {
-        const grupo = gruposPorAciertos[acierto];
-        const grupoMezclado = grupo.sort(() => Math.random() - 0.5);
-        usuariosFinales.push(...grupoMezclado);
-    }
-    
-    console.log('Orden final de usuarios para dobles (desde histórico):', usuariosFinales);
-    
-    // Asignar dobles: 1º = 2 dobles, 2º = 1 doble, 3º = 1 doble
+    // Crear mapa de usuario -> cantidad de dobles
     const doblesCalculados = {};
-    if (usuariosFinales.length >= 1) {
-        doblesCalculados[usuariosFinales[0]] = 2;
-        console.log(`${usuariosFinales[0]}: 2 dobles`);
-    }
-    if (usuariosFinales.length >= 2) {
-        doblesCalculados[usuariosFinales[1]] = 1;
-        console.log(`${usuariosFinales[1]}: 1 doble`);
-    }
-    if (usuariosFinales.length >= 3) {
-        doblesCalculados[usuariosFinales[2]] = 1;
-        console.log(`${usuariosFinales[2]}: 1 doble`);
+    for (const usuarioData of usuariosConDoblesOrdenados) {
+        doblesCalculados[usuarioData.usuario] = usuarioData.cantidadDobles;
+        console.log(`${usuarioData.usuario}: ${usuarioData.cantidadDobles} dobles (aciertos: ${usuarioData.aciertos})`);
     }
 
     // Construir HTML con mismo formato que admin
@@ -793,14 +759,14 @@ function mostrarHistorico() {
     }
     html += '</div>';
 
-    // Reparto de dobles (calculado desde el histórico, no desde quinielaData.dobles)
+    // Reparto de dobles (desde campo 'dobles' del JSON, ordenado por cantidad de dobles y aciertos)
     html += '<div class="resultado-seccion">';
     html += '<div class="titulo-seccion-resultado">Reparto de dobles:</div>';
-    for (const [usuario, numDobles] of Object.entries(doblesCalculados)) {
+    for (const usuarioData of usuariosConDoblesOrdenados) {
         html += '<div class="linea-resultado-admin linea-indentada">';
-        html += `<span class="nombre-resultado">${usuario}</span>`;
+        html += `<span class="nombre-resultado">${usuarioData.usuario}</span>`;
         html += '<span class="puntos-resultado"></span>';
-        html += `<span class="valor-resultado-admin">${numDobles}</span>`;
+        html += `<span class="valor-resultado-admin">${usuarioData.cantidadDobles}</span>`;
         html += '</div>';
     }
     html += '</div>';
@@ -808,6 +774,62 @@ function mostrarHistorico() {
     contenidoDiv.innerHTML = html;
     contenedorHistorico.appendChild(contenidoDiv);
     console.log('Histórico mostrado desde último registro del histórico');
+}
+
+/**
+ * Obtiene usuarios con dobles del campo 'dobles' del JSON
+ * Retorna array con usuario, cantidad de dobles (length de pronosticos), y aciertos
+ * @returns {Array} Array de objetos {usuario, cantidadDobles, aciertos}
+ */
+function obtenerUsuariosConDobles() {
+    const usuariosConDobles = [];
+    const aciertosPorUsuario = {};
+    
+    // Obtener aciertos del último histórico para desempates
+    if (quinielaData.historico && quinielaData.historico.length > 0) {
+        const ultimoHistorico = quinielaData.historico[quinielaData.historico.length - 1];
+        if (ultimoHistorico.aciertos) {
+            for (const acierto of ultimoHistorico.aciertos) {
+                if (acierto.nombre !== 'totales') {
+                    aciertosPorUsuario[acierto.nombre] = acierto.cantidad;
+                }
+            }
+        }
+    }
+    
+    // Extraer usuarios del campo dobles
+    if (quinielaData.dobles && quinielaData.dobles.length > 0) {
+        for (const doble of quinielaData.dobles) {
+            if (doble.usuario && doble.pronosticos) {
+                const cantidadDobles = doble.pronosticos.length;
+                const aciertos = aciertosPorUsuario[doble.usuario] || 0;
+                usuariosConDobles.push({
+                    usuario: doble.usuario,
+                    cantidadDobles: cantidadDobles,
+                    aciertos: aciertos
+                });
+            }
+        }
+    }
+    
+    console.log('Usuarios con dobles extraídos del JSON:', usuariosConDobles);
+    return usuariosConDobles;
+}
+
+/**
+ * Ordena usuarios por cantidad de dobles (descendente) y aciertos como desempate
+ * @param {Array} usuarios - Array de objetos {usuario, cantidadDobles, aciertos}
+ * @returns {Array} Array ordenado
+ */
+function ordenarPorDoblesYAciertos(usuarios) {
+    return usuarios.sort((a, b) => {
+        // Ordenar primero por cantidad de dobles (descendente)
+        if (b.cantidadDobles !== a.cantidadDobles) {
+            return b.cantidadDobles - a.cantidadDobles;
+        }
+        // Si tienen igual cantidad de dobles, ordenar por aciertos (descendente)
+        return b.aciertos - a.aciertos;
+    });
 }
 
 /**
